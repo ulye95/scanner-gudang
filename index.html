@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-
 <html lang="id">
 
 <head>
 
   <meta charset="UTF-8">
 
-<meta name="viewport"
-     content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
   <title>Sistem Gudang</title>
 
-  <script src="https://unpkg.com/html5-qrcode"
-          type="text/javascript">
+  <script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
   </script>
 
   <style>
@@ -21,7 +21,6 @@
       box-sizing: border-box;
     }
 
-
     body {
       margin: 0;
       padding: 0;
@@ -29,7 +28,6 @@
       background: #f3f4f6;
       color: #222;
     }
-
 
     .header {
       background: #d71920;
@@ -40,7 +38,6 @@
       font-weight: bold;
     }
 
-
     .container {
       max-width: 900px;
       margin: auto;
@@ -48,16 +45,13 @@
       padding-bottom: 90px;
     }
 
-
     .page {
       display: none;
     }
 
-
     .page.active {
       display: block;
     }
-
 
     .card {
       background: white;
@@ -67,13 +61,11 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
-
     label {
       display: block;
       font-weight: bold;
       margin-bottom: 7px;
     }
-
 
     input,
     select {
@@ -86,9 +78,9 @@
     }
 
 
-    /* ===================================================
+    /* =========================
        DASHBOARD
-       =================================================== */
+       ========================= */
 
     .dashboard-title {
       font-size: 22px;
@@ -96,28 +88,22 @@
       margin-bottom: 15px;
     }
 
-
     .dashboard-grid {
       display: grid;
-      grid-template-columns:
-        repeat(2, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
-
 
     .stat-card {
       background: white;
       border-radius: 15px;
       padding: 18px;
-      box-shadow:
-        0 3px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
-
 
     .stat-icon {
       font-size: 28px;
     }
-
 
     .stat-label {
       color: #666;
@@ -125,20 +111,17 @@
       margin-top: 8px;
     }
 
-
     .stat-value {
       font-size: 22px;
       font-weight: bold;
       margin-top: 5px;
     }
 
-
     .transaction-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
-
 
     .transaction-table th,
     .transaction-table td {
@@ -147,11 +130,9 @@
       text-align: left;
     }
 
-
     .transaction-table th {
       background: #f5f5f5;
     }
-
 
     .badge {
       display: inline-block;
@@ -161,18 +142,15 @@
       font-weight: bold;
     }
 
-
     .badge-masuk {
       background: #d1e7dd;
       color: #0f5132;
     }
 
-
     .badge-keluar {
       background: #f8d7da;
       color: #842029;
     }
-
 
     .refresh-button {
       width: 100%;
@@ -187,9 +165,9 @@
     }
 
 
-    /* ===================================================
+    /* =========================
        SCANNER
-       =================================================== */
+       ========================= */
 
     #reader {
       width: 100%;
@@ -198,7 +176,6 @@
       display: none;
       margin-top: 15px;
     }
-
 
     .scan-button {
       width: 100%;
@@ -212,17 +189,14 @@
       cursor: pointer;
     }
 
-
     .scan-button:active {
       transform: scale(0.98);
     }
-
 
     .scan-button:disabled {
       background: #999;
       cursor: not-allowed;
     }
-
 
     .status {
       margin-top: 15px;
@@ -233,24 +207,20 @@
       font-weight: bold;
     }
 
-
     .success {
       background: #d1e7dd;
       color: #0f5132;
     }
-
 
     .error {
       background: #f8d7da;
       color: #842029;
     }
 
-
     .info {
       background: #cff4fc;
       color: #055160;
     }
-
 
     .stock {
       font-size: 42px;
@@ -260,7 +230,6 @@
       color: #d71920;
     }
 
-
     .last-title {
       font-size: 18px;
       font-weight: bold;
@@ -268,9 +237,9 @@
     }
 
 
-    /* ===================================================
+    /* =========================
        NAVIGASI BAWAH
-       =================================================== */
+       ========================= */
 
     .bottom-nav {
       position: fixed;
@@ -283,10 +252,8 @@
       display: flex;
       justify-content: center;
       z-index: 999;
-      box-shadow:
-        0 -2px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
     }
-
 
     .nav-button {
       flex: 1;
@@ -299,11 +266,9 @@
       cursor: pointer;
     }
 
-
     .nav-button.active {
       color: #d71920;
     }
-
 
     .nav-icon {
       display: block;
@@ -312,29 +277,23 @@
     }
 
 
-    /* ===================================================
+    /* =========================
        MOBILE
-       =================================================== */
+       ========================= */
 
-    @media (
-      max-width: 600px
-    ) {
+    @media (max-width: 600px) {
 
       .dashboard-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
-
 
       .stat-value {
         font-size: 19px;
       }
 
-
       .transaction-table {
         font-size: 11px;
       }
-
 
       .transaction-table th,
       .transaction-table td {
@@ -343,406 +302,357 @@
 
     }
 
-
   </style>
 
 </head>
 
+
 <body>
 
-  <!-- ==================================================
-       HEADER
-       ================================================== -->
+
+  <!-- HEADER -->
 
   <div class="header">
-
-```
-SISTEM GUDANG
-```
-
+    SISTEM GUDANG
   </div>
+
 
   <div class="container">
 
-```
-<!-- ==================================================
-     DASHBOARD PAGE
-     ================================================== -->
 
-<div
-  id="dashboardPage"
-  class="page active">
-
-
-  <div class="dashboard-title">
-
-    📊 Dashboard
-
-  </div>
-
-
-  <!-- STATISTIK -->
-
-  <div class="dashboard-grid">
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        📦
-      </div>
-
-      <div class="stat-label">
-        Produk Aktif
-      </div>
-
-      <div
-        id="totalProduk"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        📊
-      </div>
-
-      <div class="stat-label">
-        Total Stok
-      </div>
-
-      <div
-        id="totalStok"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        💰
-      </div>
-
-      <div class="stat-label">
-        Nilai Stok HPP
-      </div>
-
-      <div
-        id="nilaiStokHPP"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        📥
-      </div>
-
-      <div class="stat-label">
-        Barang Masuk
-      </div>
-
-      <div
-        id="barangMasuk"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        📤
-      </div>
-
-      <div class="stat-label">
-        Barang Keluar
-      </div>
-
-      <div
-        id="barangKeluar"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        💵
-      </div>
-
-      <div class="stat-label">
-        Total Penjualan
-      </div>
-
-      <div
-        id="totalPenjualan"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <div class="stat-icon">
-        📈
-      </div>
-
-      <div class="stat-label">
-        Estimasi Laba Kotor
-      </div>
-
-      <div
-        id="labaKotor"
-        class="stat-value">
-
-        -
-
-      </div>
-
-    </div>
-
-
-  </div>
-
-
-  <br>
-
-
-  <!-- REFRESH -->
-
-  <div class="card">
-
-    <button
-      class="refresh-button"
-      onclick="loadDashboard()">
-
-      🔄 Refresh Dashboard
-
-    </button>
-
-  </div>
-
-
-  <!-- TRANSAKSI TERBARU -->
-
-  <div class="card">
-
-    <div class="last-title">
-
-      🕐 Transaksi Terbaru
-
-    </div>
-
+    <!-- =========================
+         DASHBOARD
+         ========================= -->
 
     <div
-      id="transactionContainer">
+      id="dashboardPage"
+      class="page active">
 
-      Memuat data...
+      <div class="dashboard-title">
+        📊 Dashboard
+      </div>
+
+
+      <div class="dashboard-grid">
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📦
+          </div>
+
+          <div class="stat-label">
+            Produk Aktif
+          </div>
+
+          <div
+            id="totalProduk"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📊
+          </div>
+
+          <div class="stat-label">
+            Total Stok
+          </div>
+
+          <div
+            id="totalStok"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            💰
+          </div>
+
+          <div class="stat-label">
+            Nilai Stok HPP
+          </div>
+
+          <div
+            id="nilaiStokHPP"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📥
+          </div>
+
+          <div class="stat-label">
+            Barang Masuk
+          </div>
+
+          <div
+            id="barangMasuk"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📤
+          </div>
+
+          <div class="stat-label">
+            Barang Keluar
+          </div>
+
+          <div
+            id="barangKeluar"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            💵
+          </div>
+
+          <div class="stat-label">
+            Total Penjualan
+          </div>
+
+          <div
+            id="totalPenjualan"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📈
+          </div>
+
+          <div class="stat-label">
+            Estimasi Laba Kotor
+          </div>
+
+          <div
+            id="labaKotor"
+            class="stat-value">
+            -
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+      <br>
+
+
+      <div class="card">
+
+        <button
+          class="refresh-button"
+          onclick="loadDashboard()">
+
+          🔄 Refresh Dashboard
+
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="last-title">
+          🕐 Transaksi Terbaru
+        </div>
+
+        <div id="transactionContainer">
+          Memuat data...
+        </div>
+
+      </div>
 
     </div>
 
-  </div>
 
-
-</div>
-
-
-
-<!-- ==================================================
-     SCAN PAGE
-     ================================================== -->
-
-<div
-  id="scanPage"
-  class="page">
-
-
-  <!-- USER -->
-
-  <div class="card">
-
-    <label>User</label>
-
-    <input
-      type="text"
-      id="user"
-      value="Admin"
-      placeholder="Nama user">
-
-  </div>
-
-
-  <!-- TRANSAKSI -->
-
-  <div class="card">
-
-    <label>
-      Jenis Transaksi
-    </label>
-
-
-    <select
-      id="jenis"
-      onchange="updateChannelVisibility()">
-
-      <option value="MASUK">
-        📥 Barang Masuk
-      </option>
-
-      <option value="KELUAR">
-        📤 Barang Keluar
-      </option>
-
-    </select>
-
-
-    <!-- CHANNEL -->
+    <!-- =========================
+         SCAN
+         ========================= -->
 
     <div
-      id="channelContainer">
-
-      <label>
-        Channel
-      </label>
+      id="scanPage"
+      class="page">
 
 
-      <select id="channel">
+      <div class="card">
 
-        <option value="Marketplace">
-          Marketplace
-        </option>
+        <label>User</label>
 
-        <option value="Offline">
-          Offline
-        </option>
+        <input
+          type="text"
+          id="user"
+          value="Admin"
+          placeholder="Nama user">
 
-      </select>
+      </div>
+
+
+      <div class="card">
+
+        <label>
+          Jenis Transaksi
+        </label>
+
+        <select
+          id="jenis"
+          onchange="updateChannelVisibility()">
+
+          <option value="MASUK">
+            📥 Barang Masuk
+          </option>
+
+          <option value="KELUAR">
+            📤 Barang Keluar
+          </option>
+
+        </select>
+
+
+        <div id="channelContainer">
+
+          <label>
+            Channel
+          </label>
+
+          <select id="channel">
+
+            <option value="Marketplace">
+              Marketplace
+            </option>
+
+            <option value="Offline">
+              Offline
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          📷 Scanner QR
+        </h3>
+
+
+        <button
+          id="scanButton"
+          class="scan-button"
+          onclick="startScanner()">
+
+          📷 SCAN
+
+        </button>
+
+
+        <div id="reader"></div>
+
+
+        <div
+          id="status"
+          class="status">
+
+          Siap melakukan scan.
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="result"
+        class="card">
+
+        <div class="last-title">
+          Transaksi Terakhir
+        </div>
+
+        Belum ada transaksi.
+
+      </div>
+
 
     </div>
 
   </div>
 
 
-  <!-- SCANNER -->
-
-  <div class="card">
-
-    <h3>
-      📷 Scanner QR
-    </h3>
-
-
-    <button
-      id="scanButton"
-      class="scan-button"
-      onclick="startScanner()">
-
-      📷 SCAN
-
-    </button>
-
-
-    <div id="reader"></div>
-
-
-    <div
-      id="status"
-      class="status">
-
-      Siap melakukan scan.
-
-    </div>
-
-  </div>
-
-
-  <!-- HASIL -->
-
-  <div
-    id="result"
-    class="card">
-
-    <div class="last-title">
-      Transaksi Terakhir
-    </div>
-
-    Belum ada transaksi.
-
-  </div>
-
-
-</div>
-```
-
-  </div>
-
-  <!-- ==================================================
+  <!-- =========================
        NAVIGASI
-       ================================================== -->
+       ========================= -->
 
   <div class="bottom-nav">
 
-```
-<button
-  id="dashboardNav"
-  class="nav-button active"
-  onclick="showPage('dashboard')">
+    <button
+      id="dashboardNav"
+      class="nav-button active"
+      onclick="showPage('dashboard')">
 
-  <span class="nav-icon">
-    🏠
-  </span>
+      <span class="nav-icon">
+        🏠
+      </span>
 
-  Dashboard
+      Dashboard
 
-</button>
+    </button>
 
 
-<button
-  id="scanNav"
-  class="nav-button"
-  onclick="showPage('scan')">
+    <button
+      id="scanNav"
+      class="nav-button"
+      onclick="showPage('scan')">
 
-  <span class="nav-icon">
-    📷
-  </span>
+      <span class="nav-icon">
+        📷
+      </span>
 
-  Scan
+      Scan
 
-</button>
-```
+    </button>
 
   </div>
+
 
 <script>
 
@@ -752,8 +662,7 @@ SISTEM GUDANG
    ===================================================== */
 
 const API_URL =
-"https://script.google.com/macros/s/AKfycbyqo2l0CmoyO0Sxvu6r53WSgy8XvuVEyMixog8s9k566qr7vMOrODJ4gHdCpnChHqVY/exec";
-
+"https://script.google.com/macros/s/AKfycbyqo2l0CmO0Sxvu6r53WSgy8XvuVEyMixog8s9k566qr7vMOrODJ4gHdCpnChHqVY/exec";
 
 
 /* =====================================================
@@ -762,90 +671,53 @@ const API_URL =
 
 function showPage(page) {
 
-
   const dashboardPage =
-    document
-      .getElementById("dashboardPage");
-
+    document.getElementById("dashboardPage");
 
   const scanPage =
-    document
-      .getElementById("scanPage");
-
+    document.getElementById("scanPage");
 
   const dashboardNav =
-    document
-      .getElementById("dashboardNav");
-
+    document.getElementById("dashboardNav");
 
   const scanNav =
-    document
-      .getElementById("scanNav");
+    document.getElementById("scanNav");
 
 
-  if (
-    page === "dashboard"
-  ) {
+  if (page === "dashboard") {
 
-    dashboardPage
-      .classList
-      .add("active");
+    dashboardPage.classList.add("active");
 
+    scanPage.classList.remove("active");
 
-    scanPage
-      .classList
-      .remove("active");
+    dashboardNav.classList.add("active");
 
-
-    dashboardNav
-      .classList
-      .add("active");
-
-
-    scanNav
-      .classList
-      .remove("active");
-
+    scanNav.classList.remove("active");
 
     loadDashboard();
 
   }
 
-
   else {
 
-    dashboardPage
-      .classList
-      .remove("active");
+    dashboardPage.classList.remove("active");
 
+    scanPage.classList.add("active");
 
-    scanPage
-      .classList
-      .add("active");
+    dashboardNav.classList.remove("active");
 
-
-    dashboardNav
-      .classList
-      .remove("active");
-
-
-    scanNav
-      .classList
-      .add("active");
+    scanNav.classList.add("active");
 
   }
 
 }
 
 
-
 /* =====================================================
    FORMAT RUPIAH
    ===================================================== */
 
-function formatRupiah(
-  angka
-) {
+function formatRupiah(angka) {
 
   return new Intl.NumberFormat(
     "id-ID",
@@ -861,34 +733,45 @@ function formatRupiah(
 }
 
 
-
 /* =====================================================
-   LOAD DASHBOARD
+   LOAD DASHBOARD JSONP
    ===================================================== */
 
 function loadDashboard() {
 
   document.getElementById("totalProduk").innerHTML = "…";
+
   document.getElementById("totalStok").innerHTML = "…";
+
   document.getElementById("nilaiStokHPP").innerHTML = "…";
+
   document.getElementById("barangMasuk").innerHTML = "…";
+
   document.getElementById("barangKeluar").innerHTML = "…";
+
   document.getElementById("totalPenjualan").innerHTML = "…";
+
   document.getElementById("labaKotor").innerHTML = "…";
+
 
   const callbackName =
     "dashboardCallback_" + Date.now();
+
 
   window[callbackName] = function(data) {
 
     try {
 
-      if (!data.success) {
+      if (!data || !data.success) {
+
         throw new Error(
-          data.message ||
-          "Gagal mengambil data dashboard."
+          data && data.message
+            ? data.message
+            : "Gagal mengambil data dashboard."
         );
+
       }
+
 
       document.getElementById("totalProduk").innerHTML =
         data.totalProduk;
@@ -911,60 +794,86 @@ function loadDashboard() {
       document.getElementById("labaKotor").innerHTML =
         formatRupiah(data.labaKotor);
 
+
       tampilkanTransaksi(
         data.transaksiTerbaru || []
       );
 
-    } catch (error) {
+    }
+
+    catch(error) {
 
       console.error(error);
 
       document.getElementById(
         "transactionContainer"
       ).innerHTML =
+
         "<div class='status error'>" +
-        "Gagal mengambil data dashboard.<br><br>" +
+
+        "Gagal mengambil data dashboard." +
+
+        "<br><br>" +
+
         error.message +
+
         "</div>";
+
     }
 
-    // Hapus callback setelah selesai
+
     delete window[callbackName];
 
-    // Hapus script
+
     const script =
       document.getElementById(callbackName);
 
+
     if (script) {
+
       script.remove();
+
     }
+
   };
+
 
   const script =
     document.createElement("script");
 
-  script.id = callbackName;
+
+  script.id =
+    callbackName;
+
 
   script.src =
     API_URL +
     "?action=dashboard&callback=" +
-    callbackName;
+    encodeURIComponent(callbackName);
+
 
   script.onerror = function() {
 
     document.getElementById(
       "transactionContainer"
     ).innerHTML =
+
       "<div class='status error'>" +
+
       "Gagal terhubung ke server Dashboard." +
+
       "</div>";
+
 
     delete window[callbackName];
 
     script.remove();
+
   };
 
+
   document.body.appendChild(script);
+
 }
 
 
@@ -972,16 +881,12 @@ function loadDashboard() {
    TAMPILKAN TRANSAKSI
    ===================================================== */
 
-function tampilkanTransaksi(
-  transaksi
-) {
-
+function tampilkanTransaksi(transaksi) {
 
   const container =
-    document
-      .getElementById(
-        "transactionContainer"
-      );
+    document.getElementById(
+      "transactionContainer"
+    );
 
 
   if (
@@ -1026,7 +931,6 @@ function tampilkanTransaksi(
 
   transaksi.forEach(
     function(item) {
-
 
       const tanggal =
         item.timestamp
@@ -1117,7 +1021,6 @@ function tampilkanTransaksi(
 }
 
 
-
 /* =====================================================
    SCANNER VARIABLES
    ===================================================== */
@@ -1133,7 +1036,6 @@ let lastCode = "";
 let lastScanTime = 0;
 
 
-
 /* =====================================================
    AUDIO
    ===================================================== */
@@ -1143,9 +1045,7 @@ let audioContext = null;
 
 function playBeep() {
 
-
   try {
-
 
     if (!audioContext) {
 
@@ -1214,7 +1114,6 @@ function playBeep() {
 
     oscillator.start(now);
 
-
     oscillator.stop(
       now + 0.20
     );
@@ -1269,7 +1168,6 @@ function playBeep() {
       now + 0.42
     );
 
-
   }
 
   catch(error) {
@@ -1284,13 +1182,11 @@ function playBeep() {
 }
 
 
-
 /* =====================================================
    VIBRASI
    ===================================================== */
 
 function vibrate() {
-
 
   try {
 
@@ -1315,13 +1211,11 @@ function vibrate() {
 }
 
 
-
 /* =====================================================
    CHANNEL
    ===================================================== */
 
 function updateChannelVisibility() {
-
 
   const jenis =
     document
@@ -1355,13 +1249,11 @@ function updateChannelVisibility() {
 }
 
 
-
 /* =====================================================
    START SCANNER
    ===================================================== */
 
 async function startScanner() {
-
 
   if (
     scannerAktif ||
@@ -1392,10 +1284,8 @@ async function startScanner() {
 
   try {
 
-
     const cameras =
-      await Html5Qrcode
-        .getCameras();
+      await Html5Qrcode.getCameras();
 
 
     if (
@@ -1419,7 +1309,6 @@ async function startScanner() {
       i < cameras.length;
       i++
     ) {
-
 
       const label =
         (
@@ -1461,14 +1350,12 @@ async function startScanner() {
       cameraId,
 
       {
-
         fps: 10,
 
         qrbox: {
           width: 250,
           height: 250
         }
-
       },
 
       onScanSuccess
@@ -1489,11 +1376,9 @@ async function startScanner() {
       "info"
     );
 
-
   }
 
   catch(error) {
-
 
     console.error(error);
 
@@ -1523,7 +1408,6 @@ async function startScanner() {
 }
 
 
-
 /* =====================================================
    QR SUCCESS
    ===================================================== */
@@ -1531,7 +1415,6 @@ async function startScanner() {
 async function onScanSuccess(
   decodedText
 ) {
-
 
   if (
     sedangProses
@@ -1583,19 +1466,16 @@ async function onScanSuccess(
 }
 
 
-
 /* =====================================================
    STOP SCANNER
    ===================================================== */
 
 async function stopScanner() {
 
-
   if (
     scanner &&
     scannerAktif
   ) {
-
 
     try {
 
@@ -1633,7 +1513,6 @@ async function stopScanner() {
 }
 
 
-
 /* =====================================================
    TRANSAKSI
    ===================================================== */
@@ -1641,7 +1520,6 @@ async function stopScanner() {
 async function processTransaction(
   kodeBarang
 ) {
-
 
   setStatus(
     "⏳ Memproses " +
@@ -1702,7 +1580,6 @@ async function processTransaction(
 
   try {
 
-
     const response =
       await fetch(
 
@@ -1733,8 +1610,6 @@ async function processTransaction(
       );
 
 
-      /* Update dashboard */
-
       loadDashboard();
 
     }
@@ -1747,24 +1622,21 @@ async function processTransaction(
 
     }
 
-
   }
 
   catch(error) {
 
-
     showError(
 
-      "Tidak dapat terhubung ke server.<br><br>" +
+      "Tidak dapat terhubung ke server." +
+      "<br><br>" +
       error.message
 
     );
 
   }
 
-
   finally {
-
 
     sedangProses =
       false;
@@ -1789,7 +1661,6 @@ async function processTransaction(
 }
 
 
-
 /* =====================================================
    SUCCESS
    ===================================================== */
@@ -1797,7 +1668,6 @@ async function processTransaction(
 function showSuccess(
   result
 ) {
-
 
   setStatus(
     "✓ Transaksi berhasil disimpan.",
@@ -1856,7 +1726,6 @@ function showSuccess(
 }
 
 
-
 /* =====================================================
    ERROR
    ===================================================== */
@@ -1864,7 +1733,6 @@ function showSuccess(
 function showError(
   message
 ) {
-
 
   setStatus(
     "✕ Transaksi gagal.",
@@ -1887,7 +1755,6 @@ function showError(
 }
 
 
-
 /* =====================================================
    STATUS
    ===================================================== */
@@ -1896,7 +1763,6 @@ function setStatus(
   message,
   type
 ) {
-
 
   const element =
     document
@@ -1916,6 +1782,18 @@ function setStatus(
 }
 
 
-
 /* =====================================================
-   INI
+   INISIALISASI
+   ===================================================== */
+
+updateChannelVisibility();
+
+loadDashboard();
+
+
+</script>
+
+
+</body>
+
+</html>
