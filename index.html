@@ -29,14 +29,149 @@
       color: #222;
     }
 
+    /* =====================================================
+       LOGIN
+       ===================================================== */
+
+    #loginPage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #f3f4f6;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      border-radius: 18px;
+      padding: 30px 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+    }
+
+    .login-logo {
+      width: 75px;
+      height: 75px;
+      margin: 0 auto 15px;
+      background: #d71920;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 35px;
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #d71920;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .login-button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .login-status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+      display: none;
+    }
+
+    .login-status.info {
+      display: block;
+      background: #cff4fc;
+      color: #055160;
+    }
+
+    .login-status.success {
+      display: block;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .login-status.error {
+      display: block;
+      background: #f8d7da;
+      color: #842029;
+    }
+
+
+    /* =====================================================
+       APLIKASI
+       ===================================================== */
+
+    #appPage {
+      display: none;
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
     .header {
       background: #d71920;
       color: white;
-      padding: 18px;
+      padding: 15px 18px;
       text-align: center;
       font-size: 22px;
       font-weight: bold;
+      position: relative;
     }
+
+    .user-info {
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 5px;
+      opacity: 0.95;
+    }
+
+    .logout-button {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      border: none;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
+    /* =====================================================
+       CONTAINER
+       ===================================================== */
 
     .container {
       max-width: 900px;
@@ -78,9 +213,9 @@
     }
 
 
-    /* =========================
+    /* =====================================================
        DASHBOARD
-       ========================= */
+       ===================================================== */
 
     .dashboard-title {
       font-size: 22px;
@@ -165,9 +300,9 @@
     }
 
 
-    /* =========================
+    /* =====================================================
        SCANNER
-       ========================= */
+       ===================================================== */
 
     #reader {
       width: 100%;
@@ -237,9 +372,9 @@
     }
 
 
-    /* =========================
+    /* =====================================================
        NAVIGASI BAWAH
-       ========================= */
+       ===================================================== */
 
     .bottom-nav {
       position: fixed;
@@ -277,9 +412,9 @@
     }
 
 
-    /* =========================
+    /* =====================================================
        MOBILE
-       ========================= */
+       ===================================================== */
 
     @media (max-width: 600px) {
 
@@ -300,6 +435,16 @@
         padding: 8px 4px;
       }
 
+      .logout-button {
+        right: 10px;
+        top: 12px;
+        padding: 7px 8px;
+      }
+
+      .header {
+        padding-right: 75px;
+      }
+
     }
 
   </style>
@@ -310,19 +455,94 @@
 <body>
 
 
+<!-- =====================================================
+     LOGIN PAGE
+     ===================================================== -->
+
+<div id="loginPage">
+
+  <div class="login-card">
+
+    <div class="login-logo">
+      📦
+    </div>
+
+    <div class="login-title">
+      SISTEM GUDANG
+    </div>
+
+    <div class="login-subtitle">
+      Silakan masuk untuk melanjutkan
+    </div>
+
+    <label>
+      User ID
+    </label>
+
+    <input
+      type="text"
+      id="loginUserId"
+      placeholder="Masukkan User ID"
+      autocomplete="username"
+      onkeydown="if(event.key === 'Enter') loginUser()">
+
+    <button
+      id="loginButton"
+      class="login-button"
+      onclick="loginUser()">
+
+      MASUK
+
+    </button>
+
+    <div
+      id="loginStatus"
+      class="login-status">
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     APPLICATION
+     ===================================================== -->
+
+<div id="appPage">
+
+
   <!-- HEADER -->
 
   <div class="header">
+
     SISTEM GUDANG
+
+    <div
+      id="userInfo"
+      class="user-info">
+
+      -
+
+    </div>
+
+    <button
+      class="logout-button"
+      onclick="logoutUser()">
+
+      🚪 Keluar
+
+    </button>
+
   </div>
 
 
   <div class="container">
 
 
-    <!-- =========================
+    <!-- =================================================
          DASHBOARD
-         ========================= -->
+         ================================================= -->
 
     <div
       id="dashboardPage"
@@ -503,9 +723,9 @@
     </div>
 
 
-    <!-- =========================
+    <!-- =================================================
          SCAN
-         ========================= -->
+         ================================================= -->
 
     <div
       id="scanPage"
@@ -514,13 +734,14 @@
 
       <div class="card">
 
-        <label>User</label>
+        <label>
+          User
+        </label>
 
         <input
           type="text"
           id="user"
-          value="Admin"
-          placeholder="Nama user">
+          readonly>
 
       </div>
 
@@ -618,9 +839,9 @@
   </div>
 
 
-  <!-- =========================
-       NAVIGASI
-       ========================= -->
+  <!-- =====================================================
+       NAVIGASI BAWAH
+       ===================================================== -->
 
   <div class="bottom-nav">
 
@@ -653,8 +874,23 @@
 
   </div>
 
+</div>
+
 
 <script>
+
+
+/* =====================================================
+   URL APPS SCRIPT
+   ===================================================== */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbyqo2l0CmoyO0Sxvu6r53WSgy8XvuVEyMixog8s9k566qr7vMOrODJ4gHdCpnChHqVY/exec";
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
 
 async function loginUser() {
 
@@ -670,6 +906,7 @@ async function loginUser() {
   const userId =
     input.value.trim();
 
+
   if (!userId) {
 
     status.innerHTML =
@@ -679,16 +916,23 @@ async function loginUser() {
       "login-status error";
 
     return;
+
   }
 
-  button.disabled = true;
-  button.innerHTML = "MEMPROSES...";
+
+  button.disabled =
+    true;
+
+  button.innerHTML =
+    "MEMPROSES...";
+
 
   status.innerHTML =
     "Memeriksa user...";
 
   status.className =
     "login-status info";
+
 
   try {
 
@@ -697,15 +941,19 @@ async function loginUser() {
         API_URL,
         {
           method: "POST",
-          body: JSON.stringify({
-            action: "login",
-            userId: userId
-          })
+
+          body:
+            JSON.stringify({
+              action: "login",
+              userId: userId
+            })
         }
       );
 
+
     const result =
       await response.json();
+
 
     if (!result.success) {
 
@@ -713,46 +961,78 @@ async function loginUser() {
         result.message ||
         "Login gagal."
       );
+
     }
 
-    // SIMPAN SESSION
+
+    const session = {
+
+      userId:
+        result.userId,
+
+      nama:
+        result.nama,
+
+      role:
+        result.role
+
+    };
+
+
     localStorage.setItem(
       "gudangUser",
-      JSON.stringify({
-        userId: result.userId,
-        nama: result.nama,
-        role: result.role
-      })
+      JSON.stringify(session)
     );
+
 
     tampilkanAplikasi();
 
-  } catch (error) {
+
+  }
+
+  catch(error) {
 
     console.error(error);
+
 
     status.innerHTML =
       error.message;
 
+
     status.className =
       "login-status error";
 
-  } finally {
+  }
 
-    button.disabled = false;
-    button.innerHTML = "MASUK";
+  finally {
+
+    button.disabled =
+      false;
+
+    button.innerHTML =
+      "MASUK";
 
   }
 
 }
 
+
+/* =====================================================
+   TAMPILKAN APLIKASI
+   ===================================================== */
+
 function tampilkanAplikasi() {
 
   const loginPage =
-    document.getElementById("loginPage");
+    document.getElementById(
+      "loginPage"
+    );
 
   const appPage =
-    document.getElementById("appPage");
+    document.getElementById(
+      "appPage"
+    );
+
 
   loginPage.style.display =
     "none";
@@ -760,54 +1040,83 @@ function tampilkanAplikasi() {
   appPage.style.display =
     "block";
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("gudangUser")
+
+  const session =
+    localStorage.getItem(
+      "gudangUser"
     );
 
-  if (user) {
 
-    document.getElementById(
-      "displayUser"
-    ).innerHTML =
-      user.nama;
+  if (!session) {
 
-    document.getElementById(
-      "displayRole"
-    ).innerHTML =
-      user.role;
+    logoutUser(false);
+
+    return;
+
   }
+
+
+  const user =
+    JSON.parse(session);
+
+
+  document.getElementById(
+    "user"
+  ).value =
+    user.nama;
+
+
+  document.getElementById(
+    "userInfo"
+  ).innerHTML =
+    user.nama +
+    " • " +
+    user.role;
+
 
   updateChannelVisibility();
 
-  loadDashboard();
-
   aturHakAkses();
 
+  loadDashboard();
+
 }
+
+
+/* =====================================================
+   CEK SESSION
+   ===================================================== */
 
 function cekSession() {
 
   const session =
-    localStorage.getItem("gudangUser");
+    localStorage.getItem(
+      "gudangUser"
+    );
+
 
   if (!session) {
 
     document.getElementById(
       "loginPage"
-    ).style.display = "flex";
+    ).style.display =
+      "flex";
 
     document.getElementById(
       "appPage"
-    ).style.display = "none";
+    ).style.display =
+      "none";
 
     return;
+
   }
+
 
   try {
 
     const user =
       JSON.parse(session);
+
 
     if (
       !user.userId ||
@@ -817,80 +1126,261 @@ function cekSession() {
       throw new Error(
         "Session tidak valid."
       );
+
     }
+
 
     tampilkanAplikasi();
 
-  } catch (error) {
+  }
+
+  catch(error) {
 
     localStorage.removeItem(
       "gudangUser"
     );
 
+
     document.getElementById(
       "loginPage"
-    ).style.display = "flex";
+    ).style.display =
+      "flex";
 
     document.getElementById(
       "appPage"
-    ).style.display = "none";
+    ).style.display =
+      "none";
+
   }
 
 }
 
-function logoutUser() {
 
-  const yakin =
-    confirm(
-      "Apakah Anda yakin ingin keluar?"
-    );
+/* =====================================================
+   LOGOUT
+   ===================================================== */
 
-  if (!yakin) return;
+function logoutUser(
+  tampilkanKonfirmasi = true
+) {
+
+  if (
+    tampilkanKonfirmasi
+  ) {
+
+    const yakin =
+      confirm(
+        "Apakah Anda yakin ingin keluar?"
+      );
+
+
+    if (!yakin) {
+
+      return;
+
+    }
+
+  }
+
 
   localStorage.removeItem(
     "gudangUser"
   );
 
+
   location.reload();
 
 }
 
+
 /* =====================================================
-   URL APPS SCRIPT
+   HAK AKSES ROLE
    ===================================================== */
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbyqo2l0CmoyO0Sxvu6r53WSgy8XvuVEyMixog8s9k566qr7vMOrODJ4gHdCpnChHqVY/exec";
+function aturHakAkses() {
+
+  const session =
+    localStorage.getItem(
+      "gudangUser"
+    );
+
+
+  if (!session) return;
+
+
+  const user =
+    JSON.parse(session);
+
+
+  const role =
+    String(
+      user.role || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+  const scanNav =
+    document.getElementById(
+      "scanNav"
+    );
+
+
+  /*
+   * ADMIN
+   * Boleh Dashboard + Scan
+   */
+
+  if (
+    role === "admin"
+  ) {
+
+    scanNav.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  /*
+   * GUDANG
+   * Boleh Dashboard + Scan
+   */
+
+  if (
+    role === "gudang"
+  ) {
+
+    scanNav.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  /*
+   * VIEWER
+   * Hanya Dashboard
+   */
+
+  if (
+    role === "viewer"
+  ) {
+
+    scanNav.style.display =
+      "none";
+
+
+    showPage(
+      "dashboard"
+    );
+
+
+    return;
+
+  }
+
+
+  /*
+   * ROLE TIDAK DIKENAL
+   */
+
+  scanNav.style.display =
+    "none";
+
+}
 
 
 /* =====================================================
    NAVIGASI
    ===================================================== */
 
-function showPage(page) {
+function showPage(
+  page
+) {
 
   const dashboardPage =
-    document.getElementById("dashboardPage");
+    document.getElementById(
+      "dashboardPage"
+    );
 
   const scanPage =
-    document.getElementById("scanPage");
+    document.getElementById(
+      "scanPage"
+    );
 
   const dashboardNav =
-    document.getElementById("dashboardNav");
+    document.getElementById(
+      "dashboardNav"
+    );
 
   const scanNav =
-    document.getElementById("scanNav");
+    document.getElementById(
+      "scanNav"
+    );
 
 
-  if (page === "dashboard") {
+  const session =
+    localStorage.getItem(
+      "gudangUser"
+    );
 
-    dashboardPage.classList.add("active");
 
-    scanPage.classList.remove("active");
+  if (!session) {
 
-    dashboardNav.classList.add("active");
+    return;
 
-    scanNav.classList.remove("active");
+  }
+
+
+  const user =
+    JSON.parse(session);
+
+
+  const role =
+    String(
+      user.role || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+  /*
+   * VIEWER TIDAK BOLEH MASUK SCAN
+   */
+
+  if (
+    page === "scan" &&
+    role === "viewer"
+  ) {
+
+    page = "dashboard";
+
+  }
+
+
+  if (
+    page === "dashboard"
+  ) {
+
+    dashboardPage.classList.add(
+      "active"
+    );
+
+    scanPage.classList.remove(
+      "active"
+    );
+
+    dashboardNav.classList.add(
+      "active"
+    );
+
+    scanNav.classList.remove(
+      "active"
+    );
+
 
     loadDashboard();
 
@@ -898,13 +1388,21 @@ function showPage(page) {
 
   else {
 
-    dashboardPage.classList.remove("active");
+    dashboardPage.classList.remove(
+      "active"
+    );
 
-    scanPage.classList.add("active");
+    scanPage.classList.add(
+      "active"
+    );
 
-    dashboardNav.classList.remove("active");
+    dashboardNav.classList.remove(
+      "active"
+    );
 
-    scanNav.classList.add("active");
+    scanNav.classList.add(
+      "active"
+    );
 
   }
 
@@ -915,7 +1413,9 @@ function showPage(page) {
    FORMAT RUPIAH
    ===================================================== */
 
-function formatRupiah(angka) {
+function formatRupiah(
+  angka
+) {
 
   return new Intl.NumberFormat(
     "id-ID",
@@ -937,107 +1437,186 @@ function formatRupiah(angka) {
 
 function loadDashboard() {
 
-  document.getElementById("totalProduk").innerHTML = "…";
+  const session =
+    localStorage.getItem(
+      "gudangUser"
+    );
 
-  document.getElementById("totalStok").innerHTML = "…";
 
-  document.getElementById("nilaiStokHPP").innerHTML = "…";
+  if (!session) {
 
-  document.getElementById("barangMasuk").innerHTML = "…";
+    return;
 
-  document.getElementById("barangKeluar").innerHTML = "…";
+  }
 
-  document.getElementById("totalPenjualan").innerHTML = "…";
 
-  document.getElementById("labaKotor").innerHTML = "…";
+  document.getElementById(
+    "totalProduk"
+  ).innerHTML =
+    "…";
+
+
+  document.getElementById(
+    "totalStok"
+  ).innerHTML =
+    "…";
+
+
+  document.getElementById(
+    "nilaiStokHPP"
+  ).innerHTML =
+    "…";
+
+
+  document.getElementById(
+    "barangMasuk"
+  ).innerHTML =
+    "…";
+
+
+  document.getElementById(
+    "barangKeluar"
+  ).innerHTML =
+    "…";
+
+
+  document.getElementById(
+    "totalPenjualan"
+  ).innerHTML =
+    "…";
+
+
+  document.getElementById(
+    "labaKotor"
+  ).innerHTML =
+    "…";
 
 
   const callbackName =
-    "dashboardCallback_" + Date.now();
+    "dashboardCallback_" +
+    Date.now();
 
 
-  window[callbackName] = function(data) {
+  window[callbackName] =
+    function(data) {
 
-    try {
+      try {
 
-      if (!data || !data.success) {
+        if (
+          !data ||
+          !data.success
+        ) {
 
-        throw new Error(
-          data && data.message
-            ? data.message
-            : "Gagal mengambil data dashboard."
+          throw new Error(
+            data &&
+            data.message
+              ? data.message
+              : "Gagal mengambil data dashboard."
+          );
+
+        }
+
+
+        document.getElementById(
+          "totalProduk"
+        ).innerHTML =
+          data.totalProduk;
+
+
+        document.getElementById(
+          "totalStok"
+        ).innerHTML =
+          data.totalStok;
+
+
+        document.getElementById(
+          "nilaiStokHPP"
+        ).innerHTML =
+          formatRupiah(
+            data.nilaiStokHPP
+          );
+
+
+        document.getElementById(
+          "barangMasuk"
+        ).innerHTML =
+          data.barangMasuk;
+
+
+        document.getElementById(
+          "barangKeluar"
+        ).innerHTML =
+          data.barangKeluar;
+
+
+        document.getElementById(
+          "totalPenjualan"
+        ).innerHTML =
+          formatRupiah(
+            data.totalPenjualan
+          );
+
+
+        document.getElementById(
+          "labaKotor"
+        ).innerHTML =
+          formatRupiah(
+            data.labaKotor
+          );
+
+
+        tampilkanTransaksi(
+          data.transaksiTerbaru || []
         );
 
       }
 
+      catch(error) {
 
-      document.getElementById("totalProduk").innerHTML =
-        data.totalProduk;
-
-      document.getElementById("totalStok").innerHTML =
-        data.totalStok;
-
-      document.getElementById("nilaiStokHPP").innerHTML =
-        formatRupiah(data.nilaiStokHPP);
-
-      document.getElementById("barangMasuk").innerHTML =
-        data.barangMasuk;
-
-      document.getElementById("barangKeluar").innerHTML =
-        data.barangKeluar;
-
-      document.getElementById("totalPenjualan").innerHTML =
-        formatRupiah(data.totalPenjualan);
-
-      document.getElementById("labaKotor").innerHTML =
-        formatRupiah(data.labaKotor);
+        console.error(error);
 
 
-      tampilkanTransaksi(
-        data.transaksiTerbaru || []
-      );
+        document.getElementById(
+          "transactionContainer"
+        ).innerHTML =
 
-    }
+          "<div class='status error'>" +
 
-    catch(error) {
+          "Gagal mengambil data dashboard." +
 
-      console.error(error);
+          "<br><br>" +
 
-      document.getElementById(
-        "transactionContainer"
-      ).innerHTML =
+          error.message +
 
-        "<div class='status error'>" +
+          "</div>";
 
-        "Gagal mengambil data dashboard." +
-
-        "<br><br>" +
-
-        error.message +
-
-        "</div>";
-
-    }
+      }
 
 
-    delete window[callbackName];
+      delete window[
+        callbackName
+      ];
 
 
-    const script =
-      document.getElementById(callbackName);
+      const script =
+        document.getElementById(
+          callbackName
+        );
 
 
-    if (script) {
+      if (script) {
 
-      script.remove();
+        script.remove();
 
-    }
+      }
 
-  };
+    };
 
 
   const script =
-    document.createElement("script");
+    document.createElement(
+      "script"
+    );
 
 
   script.id =
@@ -1047,30 +1626,38 @@ function loadDashboard() {
   script.src =
     API_URL +
     "?action=dashboard&callback=" +
-    encodeURIComponent(callbackName);
+    encodeURIComponent(
+      callbackName
+    );
 
 
-  script.onerror = function() {
+  script.onerror =
+    function() {
 
-    document.getElementById(
-      "transactionContainer"
-    ).innerHTML =
+      document.getElementById(
+        "transactionContainer"
+      ).innerHTML =
 
-      "<div class='status error'>" +
+        "<div class='status error'>" +
 
-      "Gagal terhubung ke server Dashboard." +
+        "Gagal terhubung ke server Dashboard." +
 
-      "</div>";
-
-
-    delete window[callbackName];
-
-    script.remove();
-
-  };
+        "</div>";
 
 
-  document.body.appendChild(script);
+      delete window[
+        callbackName
+      ];
+
+
+      script.remove();
+
+    };
+
+
+  document.body.appendChild(
+    script
+  );
 
 }
 
@@ -1079,7 +1666,9 @@ function loadDashboard() {
    TAMPILKAN TRANSAKSI
    ===================================================== */
 
-function tampilkanTransaksi(transaksi) {
+function tampilkanTransaksi(
+  transaksi
+) {
 
   const container =
     document.getElementById(
@@ -1310,7 +1899,9 @@ function playBeep() {
     );
 
 
-    oscillator.start(now);
+    oscillator.start(
+      now
+    );
 
     oscillator.stop(
       now + 0.20
@@ -1402,7 +1993,9 @@ function vibrate() {
 
   catch(error) {
 
-    console.log(error);
+    console.log(
+      error
+    );
 
   }
 
@@ -1417,15 +2010,16 @@ function updateChannelVisibility() {
 
   const jenis =
     document
-      .getElementById("jenis")
+      .getElementById(
+        "jenis"
+      )
       .value;
 
 
   const container =
-    document
-      .getElementById(
-        "channelContainer"
-      );
+    document.getElementById(
+      "channelContainer"
+    );
 
 
   if (
@@ -1464,10 +2058,9 @@ async function startScanner() {
 
 
   const button =
-    document
-      .getElementById(
-        "scanButton"
-      );
+    document.getElementById(
+      "scanButton"
+    );
 
 
   button.disabled =
@@ -1537,9 +2130,9 @@ async function startScanner() {
       );
 
 
-    document
-      .getElementById("reader")
-      .style.display =
+    document.getElementById(
+      "reader"
+    ).style.display =
       "block";
 
 
@@ -1578,7 +2171,9 @@ async function startScanner() {
 
   catch(error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
 
     scannerAktif =
@@ -1589,9 +2184,9 @@ async function startScanner() {
       false;
 
 
-    document
-      .getElementById("reader")
-      .style.display =
+    document.getElementById(
+      "reader"
+    ).style.display =
       "none";
 
 
@@ -1703,9 +2298,9 @@ async function stopScanner() {
     false;
 
 
-  document
-    .getElementById("reader")
-    .style.display =
+  document.getElementById(
+    "reader"
+  ).style.display =
     "none";
 
 }
@@ -1727,17 +2322,37 @@ async function processTransaction(
   );
 
 
-  const user =
-    document
-      .getElementById("user")
-      .value
-      .trim() ||
-      "Admin";
+  const session =
+    localStorage.getItem(
+      "gudangUser"
+    );
+
+
+  if (!session) {
+
+    showError(
+      "Session login tidak ditemukan."
+    );
+
+    sedangProses =
+      false;
+
+    return;
+
+  }
+
+
+  const userData =
+    JSON.parse(
+      session
+    );
 
 
   const jenis =
     document
-      .getElementById("jenis")
+      .getElementById(
+        "jenis"
+      )
       .value;
 
 
@@ -1771,7 +2386,7 @@ async function processTransaction(
       channel,
 
     user:
-      user
+      userData.userId
 
   };
 
@@ -1785,10 +2400,13 @@ async function processTransaction(
 
         {
 
-          method: "POST",
+          method:
+            "POST",
 
           body:
-            JSON.stringify(data)
+            JSON.stringify(
+              data
+            )
 
         }
 
@@ -1841,10 +2459,9 @@ async function processTransaction(
 
 
     const button =
-      document
-        .getElementById(
-          "scanButton"
-        );
+      document.getElementById(
+        "scanButton"
+      );
 
 
     button.disabled =
@@ -1873,53 +2490,53 @@ function showSuccess(
   );
 
 
-  document
-    .getElementById("result")
-    .innerHTML =
+  document.getElementById(
+    "result"
+  ).innerHTML =
 
-      "<div class='last-title'>" +
+    "<div class='last-title'>" +
 
-      "✓ TRANSAKSI BERHASIL" +
+    "✓ TRANSAKSI BERHASIL" +
 
-      "</div>" +
+    "</div>" +
 
-      "Kode Barang: " +
+    "Kode Barang: " +
 
-      result.kodeBarang +
+    result.kodeBarang +
 
-      "<br>" +
+    "<br>" +
 
-      "Nama Barang: " +
+    "Nama Barang: " +
 
-      result.namaBarang +
+    result.namaBarang +
 
-      "<br>" +
+    "<br>" +
 
-      "Jenis: " +
+    "Jenis: " +
 
-      result.jenis +
+    result.jenis +
 
-      "<br>" +
+    "<br>" +
 
-      "Channel: " +
+    "Channel: " +
 
-      result.channel +
+    result.channel +
 
-      "<br>" +
+    "<br>" +
 
-      "User: " +
+    "User: " +
 
-      result.user +
+    result.user +
 
-      "<br><br>" +
+    "<br><br>" +
 
-      "<b>STOK SEKARANG</b>" +
+    "<b>STOK SEKARANG</b>" +
 
-      "<div class='stock'>" +
+    "<div class='stock'>" +
 
-      result.stokSesudah +
+    result.stokSesudah +
 
-      "</div>";
+    "</div>";
 
 }
 
@@ -1938,17 +2555,17 @@ function showError(
   );
 
 
-  document
-    .getElementById("result")
-    .innerHTML =
+  document.getElementById(
+    "result"
+  ).innerHTML =
 
-      "<div class='last-title'>" +
+    "<div class='last-title'>" +
 
-      "✕ TRANSAKSI GAGAL" +
+    "✕ TRANSAKSI GAGAL" +
 
-      "</div>" +
+    "</div>" +
 
-      message;
+    message;
 
 }
 
@@ -1963,10 +2580,9 @@ function setStatus(
 ) {
 
   const element =
-    document
-      .getElementById(
-        "status"
-      );
+    document.getElementById(
+      "status"
+    );
 
 
   element.innerHTML =
@@ -1984,9 +2600,7 @@ function setStatus(
    INISIALISASI
    ===================================================== */
 
-updateChannelVisibility();
-
-loadDashboard();
+cekSession();
 
 
 </script>
