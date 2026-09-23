@@ -2375,20 +2375,12 @@ async function processTransaction(
 
 
   const data = {
-
-    kodeBarang:
-      kodeBarang,
-
-    jenis:
-      jenis,
-
-    channel:
-      channel,
-
-    user:
-      userData.userId
-
-  };
+  action: "scan",
+  kodeBarang: kodeBarang,
+  jenis: jenis,
+  channel: channel,
+  user: userData.userId
+};
 
 
   try {
