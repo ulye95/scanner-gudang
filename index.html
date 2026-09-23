@@ -866,119 +866,106 @@ function formatRupiah(
    LOAD DASHBOARD
    ===================================================== */
 
-async function loadDashboard() {
+function loadDashboard() {
 
+  document.getElementById("totalProduk").innerHTML = "…";
+  document.getElementById("totalStok").innerHTML = "…";
+  document.getElementById("nilaiStokHPP").innerHTML = "…";
+  document.getElementById("barangMasuk").innerHTML = "…";
+  document.getElementById("barangKeluar").innerHTML = "…";
+  document.getElementById("totalPenjualan").innerHTML = "…";
+  document.getElementById("labaKotor").innerHTML = "…";
 
-  document
-    .getElementById("totalProduk")
-    .innerHTML =
-    "…";
+  const callbackName =
+    "dashboardCallback_" + Date.now();
 
+  window[callbackName] = function(data) {
 
-  try {
+    try {
 
+      if (!data.success) {
+        throw new Error(
+          data.message ||
+          "Gagal mengambil data dashboard."
+        );
+      }
 
-    const response =
-      await fetch(
-        API_URL +
-        "?action=dashboard"
+      document.getElementById("totalProduk").innerHTML =
+        data.totalProduk;
+
+      document.getElementById("totalStok").innerHTML =
+        data.totalStok;
+
+      document.getElementById("nilaiStokHPP").innerHTML =
+        formatRupiah(data.nilaiStokHPP);
+
+      document.getElementById("barangMasuk").innerHTML =
+        data.barangMasuk;
+
+      document.getElementById("barangKeluar").innerHTML =
+        data.barangKeluar;
+
+      document.getElementById("totalPenjualan").innerHTML =
+        formatRupiah(data.totalPenjualan);
+
+      document.getElementById("labaKotor").innerHTML =
+        formatRupiah(data.labaKotor);
+
+      tampilkanTransaksi(
+        data.transaksiTerbaru || []
       );
 
+    } catch (error) {
 
-    const data =
-      await response.json();
+      console.error(error);
 
-
-    if (
-      !data.success
-    ) {
-
-      throw new Error(
-        data.message ||
-        "Gagal mengambil data dashboard."
-      );
-
+      document.getElementById(
+        "transactionContainer"
+      ).innerHTML =
+        "<div class='status error'>" +
+        "Gagal mengambil data dashboard.<br><br>" +
+        error.message +
+        "</div>";
     }
 
+    // Hapus callback setelah selesai
+    delete window[callbackName];
 
-    document
-      .getElementById("totalProduk")
-      .innerHTML =
-      data.totalProduk;
+    // Hapus script
+    const script =
+      document.getElementById(callbackName);
 
+    if (script) {
+      script.remove();
+    }
+  };
 
-    document
-      .getElementById("totalStok")
-      .innerHTML =
-      data.totalStok;
+  const script =
+    document.createElement("script");
 
+  script.id = callbackName;
 
-    document
-      .getElementById("nilaiStokHPP")
-      .innerHTML =
-      formatRupiah(
-        data.nilaiStokHPP
-      );
+  script.src =
+    API_URL +
+    "?action=dashboard&callback=" +
+    callbackName;
 
+  script.onerror = function() {
 
-    document
-      .getElementById("barangMasuk")
-      .innerHTML =
-      data.barangMasuk;
+    document.getElementById(
+      "transactionContainer"
+    ).innerHTML =
+      "<div class='status error'>" +
+      "Gagal terhubung ke server Dashboard." +
+      "</div>";
 
+    delete window[callbackName];
 
-    document
-      .getElementById("barangKeluar")
-      .innerHTML =
-      data.barangKeluar;
+    script.remove();
+  };
 
-
-    document
-      .getElementById("totalPenjualan")
-      .innerHTML =
-      formatRupiah(
-        data.totalPenjualan
-      );
-
-
-    document
-      .getElementById("labaKotor")
-      .innerHTML =
-      formatRupiah(
-        data.labaKotor
-      );
-
-
-    tampilkanTransaksi(
-      data.transaksiTerbaru
-    );
-
-
-  }
-
-
-  catch(error) {
-
-
-    console.error(error);
-
-
-    document
-      .getElementById("transactionContainer")
-      .innerHTML =
-
-        "<div class='status error'>" +
-
-        "Gagal mengambil data dashboard.<br><br>" +
-
-        error.message +
-
-        "</div>";
-
-  }
-
+  document.body.appendChild(script);
 }
-
 
 
 /* =====================================================
