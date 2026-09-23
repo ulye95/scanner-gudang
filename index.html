@@ -148,23 +148,23 @@
       </select>
 
 
-      <label>Channel</label>
+      <div id="channelContainer">
 
-      <select id="channel">
+  <label>Channel</label>
 
-        <option value="-">
-          -
-        </option>
+  <select id="channel">
 
-        <option value="Marketplace">
-          Marketplace
-        </option>
+    <option value="Marketplace">
+      Marketplace
+    </option>
 
-        <option value="Offline">
-          Offline
-        </option>
+    <option value="Offline">
+      Offline
+    </option>
 
-      </select>
+  </select>
+
+</div>
 
     </div>
 
@@ -219,6 +219,88 @@ let scanner = null;
 let lastCode = "";
 
 let lastScanTime = 0;
+
+let audioContext = null;
+
+
+function playBeep() {
+
+  try {
+
+    if (!audioContext) {
+
+      audioContext =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+
+    }
+
+
+    if (
+      audioContext.state === "suspended"
+    ) {
+
+      audioContext.resume();
+
+    }
+
+
+    const oscillator =
+      audioContext.createOscillator();
+
+
+    const gainNode =
+      audioContext.createGain();
+
+
+    oscillator.type = "sine";
+
+
+    oscillator.frequency.setValueAtTime(
+      1000,
+      audioContext.currentTime
+    );
+
+
+    gainNode.gain.setValueAtTime(
+      0.2,
+      audioContext.currentTime
+    );
+
+
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.01,
+      audioContext.currentTime + 0.15
+    );
+
+
+    oscillator.connect(gainNode);
+
+    gainNode.connect(
+      audioContext.destination
+    );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+      audioContext.currentTime + 0.15
+    );
+
+
+  } catch (error) {
+
+    console.log(
+      "Beep tidak dapat diputar:",
+      error
+    );
+
+  }
+
+}
 
 
 
@@ -359,6 +441,13 @@ function onScanSuccess(decodedText) {
 
   lastScanTime =
     now;
+
+
+  /*
+   * Bunyi saat QR berhasil terdeteksi
+   */
+
+  playBeep();
 
 
   processTransaction(
@@ -564,6 +653,51 @@ function setStatus(
     "status " + type;
 
 }
+
+function updateChannelVisibility() {
+
+  const jenis =
+    document
+      .getElementById("jenis")
+      .value;
+
+
+  const channelContainer =
+    document
+      .getElementById("channelContainer");
+
+
+  const channel =
+    document
+      .getElementById("channel");
+
+
+  if (jenis === "MASUK") {
+
+    channelContainer.style.display =
+      "none";
+
+    channel.value = "-";
+
+  } else {
+
+    channelContainer.style.display =
+      "block";
+
+  }
+
+}
+
+
+document
+  .getElementById("jenis")
+  .addEventListener(
+    "change",
+    updateChannelVisibility
+  );
+
+
+updateChannelVisibility();
 
 
 
