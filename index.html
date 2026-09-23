@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Sistem Gudang</title>
+
+  <script src="https://unpkg.com/html5-qrcode"
+          type="text/javascript">
+  </script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #222;
+    }
+
+    .header {
+      background: #d71920;
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 550px;
+      margin: auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    #reader {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #eef2ff;
+      text-align: center;
+    }
+
+    .success {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .info {
+      background: #cff4fc;
+      color: #055160;
+    }
+
+    .stock {
+      font-size: 38px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="header">
+    SISTEM GUDANG
+  </div>
+
+
+  <div class="container">
+
+
+    <div class="card">
+
+      <label>User</label>
+
+      <input
+        type="text"
+        id="user"
+        value="Admin"
+        placeholder="Nama user">
+
+    </div>
+
+
+    <div class="card">
+
+      <label>Jenis Transaksi</label>
+
+      <select id="jenis">
+
+        <option value="MASUK">
+          📥 Barang Masuk
+        </option>
+
+        <option value="KELUAR">
+          📤 Barang Keluar
+        </option>
+
+      </select>
+
+
+      <label>Channel</label>
+
+      <select id="channel">
+
+        <option value="-">
+          -
+        </option>
+
+        <option value="Marketplace">
+          Marketplace
+        </option>
+
+        <option value="Offline">
+          Offline
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>📷 Scanner QR</h3>
+
+      <div id="reader"></div>
+
+      <div
+        id="status"
+        class="status">
+
+        Memulai kamera...
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="result"
+      class="card">
+
+      Belum ada transaksi.
+
+    </div>
+
+
+  </div>
+
+
+<script>
+
+
+/* =====================================================
+   URL APPS SCRIPT
+   ===================================================== */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbyqo2l0CmoyO0Sxvu6r53WSgy8XvuVEyMixog8s9k566qr7vMOrODJ4gHdCpnChHqVY/exec";
+
+
+
+/* =====================================================
+   SCANNER
+   ===================================================== */
+
+let scanner = null;
+
+let lastCode = "";
+
+let lastScanTime = 0;
+
+
+
+/* =====================================================
+   MULAI SCANNER
+   ===================================================== */
+
+async function startScanner() {
+
+  try {
+
+    const cameras =
+      await Html5Qrcode.getCameras();
+
+
+    if (
+      !cameras ||
+      cameras.length === 0
+    ) {
+
+      throw new Error(
+        "Kamera tidak ditemukan."
+      );
+
+    }
+
+
+    /*
+     * Cari kamera belakang
+     */
+
+    let cameraId =
+      cameras[0].id;
+
+
+    for (
+      let i = 0;
+      i < cameras.length;
+      i++
+    ) {
+
+      const label =
+        (
+          cameras[i].label || ""
+        ).toLowerCase();
+
+
+      if (
+        label.includes("back") ||
+        label.includes("rear") ||
+        label.includes("environment")
+      ) {
+
+        cameraId =
+          cameras[i].id;
+
+        break;
+
+      }
+
+    }
+
+
+    scanner =
+      new Html5Qrcode("reader");
+
+
+    await scanner.start(
+
+      cameraId,
+
+      {
+        fps: 10,
+
+        qrbox: {
+          width: 250,
+          height: 250
+        }
+      },
+
+      onScanSuccess
+
+    );
+
+
+    setStatus(
+      "Arahkan kamera ke QR Code.",
+      "info"
+    );
+
+  }
+
+
+  catch(error) {
+
+    console.error(error);
+
+
+    setStatus(
+      "Kamera gagal dibuka: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+
+/* =====================================================
+   HASIL SCAN
+   ===================================================== */
+
+function onScanSuccess(decodedText) {
+
+  const now =
+    Date.now();
+
+
+  /*
+   * Anti double scan
+   */
+
+  if (
+    decodedText === lastCode &&
+    now - lastScanTime < 2000
+  ) {
+
+    return;
+
+  }
+
+
+  lastCode =
+    decodedText;
+
+
+  lastScanTime =
+    now;
+
+
+  processTransaction(
+    decodedText.trim()
+  );
+
+}
+
+
+
+/* =====================================================
+   PROSES TRANSAKSI
+   ===================================================== */
+
+async function processTransaction(kodeBarang) {
+
+  setStatus(
+    "⏳ Memproses " +
+    kodeBarang +
+    "...",
+    "info"
+  );
+
+
+  const user =
+    document
+      .getElementById("user")
+      .value
+      .trim() || "Admin";
+
+
+  const jenis =
+    document
+      .getElementById("jenis")
+      .value;
+
+
+  const channel =
+    document
+      .getElementById("channel")
+      .value;
+
+
+  const data = {
+
+    kodeBarang:
+      kodeBarang,
+
+    jenis:
+      jenis,
+
+    channel:
+      channel,
+
+    user:
+      user
+
+  };
+
+
+  try {
+
+    const response =
+      await fetch(
+
+        API_URL,
+
+        {
+          method: "POST",
+
+          body:
+            JSON.stringify(data)
+
+        }
+
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (result.success) {
+
+      showSuccess(result);
+
+    }
+
+    else {
+
+      showError(
+        result.message
+      );
+
+    }
+
+  }
+
+
+  catch(error) {
+
+    showError(
+      "Tidak dapat terhubung ke server.<br><br>" +
+      error.message
+    );
+
+  }
+
+}
+
+
+
+/* =====================================================
+   SUCCESS
+   ===================================================== */
+
+function showSuccess(result) {
+
+  setStatus(
+    "✓ Scan berhasil. Silakan scan berikutnya.",
+    "success"
+  );
+
+
+  document
+    .getElementById("result")
+    .innerHTML =
+
+      "<b>✓ TRANSAKSI BERHASIL</b><br><br>" +
+
+      "Kode Barang: " +
+      result.kodeBarang +
+      "<br>" +
+
+      "Nama Barang: " +
+      result.namaBarang +
+      "<br>" +
+
+      "Jenis: " +
+      result.jenis +
+      "<br>" +
+
+      "Channel: " +
+      result.channel +
+      "<br>" +
+
+      "User: " +
+      result.user +
+      "<br><br>" +
+
+      "<b>STOK SEKARANG</b>" +
+
+      "<div class='stock'>" +
+      result.stokSesudah +
+      "</div>";
+
+}
+
+
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+function showError(message) {
+
+  setStatus(
+    "✕ Transaksi gagal.",
+    "error"
+  );
+
+
+  document
+    .getElementById("result")
+    .innerHTML =
+
+      "<b>✕ TRANSAKSI GAGAL</b><br><br>" +
+      message;
+
+}
+
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+function setStatus(
+  message,
+  type
+) {
+
+  const element =
+    document
+      .getElementById("status");
+
+
+  element.innerHTML =
+    message;
+
+
+  element.className =
+    "status " + type;
+
+}
+
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+startScanner();
+
+</script>
+
+</body>
+
+</html>
