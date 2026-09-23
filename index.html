@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="id">
 
 <head>
 
   <meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+     content="width=device-width, initial-scale=1.0">
 
   <title>Sistem Gudang</title>
 
@@ -20,6 +21,7 @@
       box-sizing: border-box;
     }
 
+
     body {
       margin: 0;
       padding: 0;
@@ -27,6 +29,7 @@
       background: #f3f4f6;
       color: #222;
     }
+
 
     .header {
       background: #d71920;
@@ -37,11 +40,13 @@
       font-weight: bold;
     }
 
+
     .container {
       max-width: 550px;
       margin: auto;
       padding: 15px;
     }
+
 
     .card {
       background: white;
@@ -51,11 +56,13 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
+
     label {
       display: block;
       font-weight: bold;
       margin-bottom: 7px;
     }
+
 
     input,
     select {
@@ -67,11 +74,39 @@
       margin-bottom: 15px;
     }
 
+
     #reader {
       width: 100%;
       overflow: hidden;
       border-radius: 12px;
+      display: none;
+      margin-top: 15px;
     }
+
+
+    .scan-button {
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: 12px;
+      background: #d71920;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
+    .scan-button:active {
+      transform: scale(0.98);
+    }
+
+
+    .scan-button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
 
     .status {
       margin-top: 15px;
@@ -79,124 +114,171 @@
       border-radius: 10px;
       background: #eef2ff;
       text-align: center;
+      font-weight: bold;
     }
+
 
     .success {
       background: #d1e7dd;
       color: #0f5132;
     }
 
+
     .error {
       background: #f8d7da;
       color: #842029;
     }
+
 
     .info {
       background: #cff4fc;
       color: #055160;
     }
 
+
     .stock {
-      font-size: 38px;
+      font-size: 42px;
       font-weight: bold;
       text-align: center;
       margin-top: 10px;
+      color: #d71920;
     }
+
+
+    .last-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+
+    .hidden {
+      display: none;
+    }
+
 
   </style>
 
 </head>
 
-
 <body>
 
   <div class="header">
-    SISTEM GUDANG
-  </div>
 
+```
+SISTEM GUDANG
+```
+
+  </div>
 
   <div class="container">
 
+```
+<!-- USER -->
 
-    <div class="card">
+<div class="card">
 
-      <label>User</label>
+  <label>User</label>
 
-      <input
-        type="text"
-        id="user"
-        value="Admin"
-        placeholder="Nama user">
+  <input
+    type="text"
+    id="user"
+    value="Admin"
+    placeholder="Nama user">
 
-    </div>
-
-
-    <div class="card">
-
-      <label>Jenis Transaksi</label>
-
-      <select id="jenis">
-
-        <option value="MASUK">
-          📥 Barang Masuk
-        </option>
-
-        <option value="KELUAR">
-          📤 Barang Keluar
-        </option>
-
-      </select>
+</div>
 
 
-      <div id="channelContainer">
+<!-- TRANSAKSI -->
 
-  <label>Channel</label>
+<div class="card">
 
-  <select id="channel">
+  <label>Jenis Transaksi</label>
 
-    <option value="Marketplace">
-      Marketplace
+  <select id="jenis"
+          onchange="updateChannelVisibility()">
+
+    <option value="MASUK">
+      📥 Barang Masuk
     </option>
 
-    <option value="Offline">
-      Offline
+    <option value="KELUAR">
+      📤 Barang Keluar
     </option>
 
   </select>
 
-</div>
 
-    </div>
+  <!-- CHANNEL -->
 
+  <div id="channelContainer">
 
-    <div class="card">
+    <label>Channel</label>
 
-      <h3>📷 Scanner QR</h3>
+    <select id="channel">
 
-      <div id="reader"></div>
+      <option value="Marketplace">
+        Marketplace
+      </option>
 
-      <div
-        id="status"
-        class="status">
+      <option value="Offline">
+        Offline
+      </option>
 
-        Memulai kamera...
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="result"
-      class="card">
-
-      Belum ada transaksi.
-
-    </div>
-
+    </select>
 
   </div>
 
+</div>
+
+
+<!-- SCANNER -->
+
+<div class="card">
+
+  <h3>📷 Scanner QR</h3>
+
+
+  <button
+    id="scanButton"
+    class="scan-button"
+    onclick="startScanner()">
+
+    📷 SCAN
+
+  </button>
+
+
+  <div id="reader"></div>
+
+
+  <div
+    id="status"
+    class="status">
+
+    Siap melakukan scan.
+
+  </div>
+
+</div>
+
+
+<!-- HASIL -->
+
+<div
+  id="result"
+  class="card">
+
+  <div class="last-title">
+    Transaksi Terakhir
+  </div>
+
+  Belum ada transaksi.
+
+</div>
+```
+
+  </div>
 
 <script>
 
@@ -211,19 +293,26 @@ const API_URL =
 
 
 /* =====================================================
-   SCANNER
+   VARIABLE SCANNER
    ===================================================== */
 
 let scanner = null;
+
+let scannerAktif = false;
+
+let sedangProses = false;
 
 let lastCode = "";
 
 let lastScanTime = 0;
 
+
+/* =====================================================
+   AUDIO BEEP
+   ===================================================== */
+
 let audioContext = null;
 
-
-let audioContext = null;
 
 function playBeep() {
 
@@ -253,9 +342,7 @@ function playBeep() {
       audioContext.currentTime;
 
 
-    /*
-     * BEEP UTAMA
-     */
+    /* BEEP PERTAMA */
 
     const oscillator =
       audioContext.createOscillator();
@@ -264,7 +351,8 @@ function playBeep() {
       audioContext.createGain();
 
 
-    oscillator.type = "square";
+    oscillator.type =
+      "square";
 
 
     oscillator.frequency.setValueAtTime(
@@ -272,10 +360,6 @@ function playBeep() {
       now
     );
 
-
-    /*
-     * Volume beep
-     */
 
     gainNode.gain.setValueAtTime(
       0.8,
@@ -303,10 +387,7 @@ function playBeep() {
     );
 
 
-    /*
-     * BEEP KEDUA
-     * Memberikan efek "beep-beep"
-     */
+    /* BEEP KEDUA */
 
     const oscillator2 =
       audioContext.createOscillator();
@@ -315,7 +396,8 @@ function playBeep() {
       audioContext.createGain();
 
 
-    oscillator2.type = "square";
+    oscillator2.type =
+      "square";
 
 
     oscillator2.frequency.setValueAtTime(
@@ -353,7 +435,9 @@ function playBeep() {
     );
 
 
-  } catch (error) {
+  }
+
+  catch(error) {
 
     console.log(
       "Beep tidak dapat diputar:",
@@ -367,12 +451,110 @@ function playBeep() {
 
 
 /* =====================================================
+   VIBRASI
+   ===================================================== */
+
+function vibrate() {
+
+  try {
+
+    if (
+      navigator.vibrate
+    ) {
+
+      navigator.vibrate(
+        [100, 50, 100]
+      );
+
+    }
+
+  }
+
+  catch(error) {
+
+    console.log(error);
+
+  }
+
+}
+
+
+
+/* =====================================================
+   TAMPILKAN / SEMBUNYIKAN CHANNEL
+   ===================================================== */
+
+function updateChannelVisibility() {
+
+  const jenis =
+    document
+      .getElementById("jenis")
+      .value;
+
+
+  const channelContainer =
+    document
+      .getElementById("channelContainer");
+
+
+  if (
+    jenis === "MASUK"
+  ) {
+
+    channelContainer.style.display =
+      "none";
+
+  }
+
+  else {
+
+    channelContainer.style.display =
+      "block";
+
+  }
+
+}
+
+
+
+/* =====================================================
    MULAI SCANNER
    ===================================================== */
 
 async function startScanner() {
 
+
+  if (scannerAktif) {
+
+    return;
+
+  }
+
+
+  if (sedangProses) {
+
+    return;
+
+  }
+
+
+  const button =
+    document
+      .getElementById("scanButton");
+
+
+  button.disabled =
+    true;
+
+
+  setStatus(
+    "⏳ Membuka kamera...",
+    "info"
+  );
+
+
   try {
+
 
     const cameras =
       await Html5Qrcode.getCameras();
@@ -390,9 +572,7 @@ async function startScanner() {
     }
 
 
-    /*
-     * Cari kamera belakang
-     */
+    /* Cari kamera belakang */
 
     let cameraId =
       cameras[0].id;
@@ -427,7 +607,15 @@ async function startScanner() {
 
 
     scanner =
-      new Html5Qrcode("reader");
+      new Html5Qrcode(
+        "reader"
+      );
+
+
+    document
+      .getElementById("reader")
+      .style.display =
+      "block";
 
 
     await scanner.start(
@@ -435,12 +623,14 @@ async function startScanner() {
       cameraId,
 
       {
+
         fps: 10,
 
         qrbox: {
           width: 250,
           height: 250
         }
+
       },
 
       onScanSuccess
@@ -448,17 +638,40 @@ async function startScanner() {
     );
 
 
+    scannerAktif =
+      true;
+
+
+    button.disabled =
+      false;
+
+
     setStatus(
-      "Arahkan kamera ke QR Code.",
+      "📷 Arahkan kamera ke QR Code.",
       "info"
     );
 
-  }
 
+  }
 
   catch(error) {
 
+
     console.error(error);
+
+
+    scannerAktif =
+      false;
+
+
+    button.disabled =
+      false;
+
+
+    document
+      .getElementById("reader")
+      .style.display =
+      "none";
 
 
     setStatus(
@@ -474,18 +687,26 @@ async function startScanner() {
 
 
 /* =====================================================
-   HASIL SCAN
+   QR BERHASIL TERBACA
    ===================================================== */
 
-function onScanSuccess(decodedText) {
+async function onScanSuccess(
+  decodedText
+) {
+
+
+  if (sedangProses) {
+
+    return;
+
+  }
+
 
   const now =
     Date.now();
 
 
-  /*
-   * Anti double scan
-   */
+  /* Anti double scan */
 
   if (
     decodedText === lastCode &&
@@ -505,16 +726,80 @@ function onScanSuccess(decodedText) {
     now;
 
 
-  /*
-   * Bunyi saat QR berhasil terdeteksi
-   */
+  /* BEEP */
 
   playBeep();
 
+  vibrate();
 
-  processTransaction(
+
+  /* Kunci proses */
+
+  sedangProses =
+    true;
+
+
+  /* Matikan scanner */
+
+  await stopScanner();
+
+
+  /* Proses transaksi */
+
+  await processTransaction(
     decodedText.trim()
   );
+
+
+}
+
+
+
+/* =====================================================
+   STOP SCANNER OTOMATIS
+   ===================================================== */
+
+async function stopScanner() {
+
+
+  if (
+    scanner &&
+    scannerAktif
+  ) {
+
+    try {
+
+      await scanner.stop();
+
+      await scanner.clear();
+
+    }
+
+    catch(error) {
+
+      console.log(
+        "Scanner stop:",
+        error
+      );
+
+    }
+
+  }
+
+
+  scanner =
+    null;
+
+
+  scannerAktif =
+    false;
+
+
+  document
+    .getElementById("reader")
+    .style.display =
+    "none";
+
 
 }
 
@@ -524,7 +809,10 @@ function onScanSuccess(decodedText) {
    PROSES TRANSAKSI
    ===================================================== */
 
-async function processTransaction(kodeBarang) {
+async function processTransaction(
+  kodeBarang
+) {
+
 
   setStatus(
     "⏳ Memproses " +
@@ -538,7 +826,8 @@ async function processTransaction(kodeBarang) {
     document
       .getElementById("user")
       .value
-      .trim() || "Admin";
+      .trim() ||
+      "Admin";
 
 
   const jenis =
@@ -547,10 +836,20 @@ async function processTransaction(kodeBarang) {
       .value;
 
 
-  const channel =
-    document
-      .getElementById("channel")
-      .value;
+  let channel =
+    "-";
+
+
+  if (
+    jenis === "KELUAR"
+  ) {
+
+    channel =
+      document
+        .getElementById("channel")
+        .value;
+
+  }
 
 
   const data = {
@@ -572,12 +871,14 @@ async function processTransaction(kodeBarang) {
 
   try {
 
+
     const response =
       await fetch(
 
         API_URL,
 
         {
+
           method: "POST",
 
           body:
@@ -592,9 +893,13 @@ async function processTransaction(kodeBarang) {
       await response.json();
 
 
-    if (result.success) {
+    if (
+      result.success
+    ) {
 
-      showSuccess(result);
+      showSuccess(
+        result
+      );
 
     }
 
@@ -606,15 +911,43 @@ async function processTransaction(kodeBarang) {
 
     }
 
-  }
 
+  }
 
   catch(error) {
 
+
     showError(
+
       "Tidak dapat terhubung ke server.<br><br>" +
       error.message
+
     );
+
+  }
+
+
+  finally {
+
+
+    sedangProses =
+      false;
+
+
+    /* Kembali ke kondisi SCAN */
+
+    const button =
+      document
+        .getElementById("scanButton");
+
+
+    button.disabled =
+      false;
+
+
+    button.innerHTML =
+      "📷 SCAN";
+
 
   }
 
@@ -623,13 +956,16 @@ async function processTransaction(kodeBarang) {
 
 
 /* =====================================================
-   SUCCESS
+   TRANSAKSI BERHASIL
    ===================================================== */
 
-function showSuccess(result) {
+function showSuccess(
+  result
+) {
+
 
   setStatus(
-    "✓ Scan berhasil. Silakan scan berikutnya.",
+    "✓ Transaksi berhasil disimpan.",
     "success"
   );
 
@@ -638,32 +974,48 @@ function showSuccess(result) {
     .getElementById("result")
     .innerHTML =
 
-      "<b>✓ TRANSAKSI BERHASIL</b><br><br>" +
+      "<div class='last-title'>" +
+
+      "✓ TRANSAKSI BERHASIL" +
+
+      "</div>" +
 
       "Kode Barang: " +
+
       result.kodeBarang +
+
       "<br>" +
 
       "Nama Barang: " +
+
       result.namaBarang +
+
       "<br>" +
 
       "Jenis: " +
+
       result.jenis +
+
       "<br>" +
 
       "Channel: " +
+
       result.channel +
+
       "<br>" +
 
       "User: " +
+
       result.user +
+
       "<br><br>" +
 
       "<b>STOK SEKARANG</b>" +
 
       "<div class='stock'>" +
+
       result.stokSesudah +
+
       "</div>";
 
 }
@@ -671,10 +1023,13 @@ function showSuccess(result) {
 
 
 /* =====================================================
-   ERROR
+   TRANSAKSI GAGAL
    ===================================================== */
 
-function showError(message) {
+function showError(
+  message
+) {
+
 
   setStatus(
     "✕ Transaksi gagal.",
@@ -686,7 +1041,12 @@ function showError(message) {
     .getElementById("result")
     .innerHTML =
 
-      "<b>✕ TRANSAKSI GAGAL</b><br><br>" +
+      "<div class='last-title'>" +
+
+      "✕ TRANSAKSI GAGAL" +
+
+      "</div>" +
+
       message;
 
 }
@@ -702,6 +1062,7 @@ function setStatus(
   type
 ) {
 
+
   const element =
     document
       .getElementById("status");
@@ -716,58 +1077,14 @@ function setStatus(
 
 }
 
-function updateChannelVisibility() {
-
-  const jenis =
-    document
-      .getElementById("jenis")
-      .value;
-
-
-  const channelContainer =
-    document
-      .getElementById("channelContainer");
-
-
-  const channel =
-    document
-      .getElementById("channel");
-
-
-  if (jenis === "MASUK") {
-
-    channelContainer.style.display =
-      "none";
-
-    channel.value = "-";
-
-  } else {
-
-    channelContainer.style.display =
-      "block";
-
-  }
-
-}
-
-
-document
-  .getElementById("jenis")
-  .addEventListener(
-    "change",
-    updateChannelVisibility
-  );
-
-
-updateChannelVisibility();
-
 
 
 /* =====================================================
-   START
+   SAAT HALAMAN DIBUKA
    ===================================================== */
 
-startScanner();
+updateChannelVisibility();
+
 
 </script>
 
