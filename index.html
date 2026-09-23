@@ -223,6 +223,8 @@ let lastScanTime = 0;
 let audioContext = null;
 
 
+let audioContext = null;
+
 function playBeep() {
 
   try {
@@ -247,32 +249,43 @@ function playBeep() {
     }
 
 
+    const now =
+      audioContext.currentTime;
+
+
+    /*
+     * BEEP UTAMA
+     */
+
     const oscillator =
       audioContext.createOscillator();
-
 
     const gainNode =
       audioContext.createGain();
 
 
-    oscillator.type = "sine";
+    oscillator.type = "square";
 
 
     oscillator.frequency.setValueAtTime(
-      1000,
-      audioContext.currentTime
+      1400,
+      now
     );
 
 
+    /*
+     * Volume beep
+     */
+
     gainNode.gain.setValueAtTime(
-      0.2,
-      audioContext.currentTime
+      0.8,
+      now
     );
 
 
     gainNode.gain.exponentialRampToValueAtTime(
       0.01,
-      audioContext.currentTime + 0.15
+      now + 0.20
     );
 
 
@@ -283,11 +296,60 @@ function playBeep() {
     );
 
 
-    oscillator.start();
-
+    oscillator.start(now);
 
     oscillator.stop(
-      audioContext.currentTime + 0.15
+      now + 0.20
+    );
+
+
+    /*
+     * BEEP KEDUA
+     * Memberikan efek "beep-beep"
+     */
+
+    const oscillator2 =
+      audioContext.createOscillator();
+
+    const gainNode2 =
+      audioContext.createGain();
+
+
+    oscillator2.type = "square";
+
+
+    oscillator2.frequency.setValueAtTime(
+      1800,
+      now + 0.22
+    );
+
+
+    gainNode2.gain.setValueAtTime(
+      0.8,
+      now + 0.22
+    );
+
+
+    gainNode2.gain.exponentialRampToValueAtTime(
+      0.01,
+      now + 0.42
+    );
+
+
+    oscillator2.connect(gainNode2);
+
+    gainNode2.connect(
+      audioContext.destination
+    );
+
+
+    oscillator2.start(
+      now + 0.22
+    );
+
+
+    oscillator2.stop(
+      now + 0.42
     );
 
 
