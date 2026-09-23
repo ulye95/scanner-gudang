@@ -656,6 +656,204 @@
 
 <script>
 
+async function loginUser() {
+
+  const input =
+    document.getElementById("loginUserId");
+
+  const button =
+    document.getElementById("loginButton");
+
+  const status =
+    document.getElementById("loginStatus");
+
+  const userId =
+    input.value.trim();
+
+  if (!userId) {
+
+    status.innerHTML =
+      "User ID wajib diisi.";
+
+    status.className =
+      "login-status error";
+
+    return;
+  }
+
+  button.disabled = true;
+  button.innerHTML = "MEMPROSES...";
+
+  status.innerHTML =
+    "Memeriksa user...";
+
+  status.className =
+    "login-status info";
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            action: "login",
+            userId: userId
+          })
+        }
+      );
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message ||
+        "Login gagal."
+      );
+    }
+
+    // SIMPAN SESSION
+    localStorage.setItem(
+      "gudangUser",
+      JSON.stringify({
+        userId: result.userId,
+        nama: result.nama,
+        role: result.role
+      })
+    );
+
+    tampilkanAplikasi();
+
+  } catch (error) {
+
+    console.error(error);
+
+    status.innerHTML =
+      error.message;
+
+    status.className =
+      "login-status error";
+
+  } finally {
+
+    button.disabled = false;
+    button.innerHTML = "MASUK";
+
+  }
+
+}
+
+function tampilkanAplikasi() {
+
+  const loginPage =
+    document.getElementById("loginPage");
+
+  const appPage =
+    document.getElementById("appPage");
+
+  loginPage.style.display =
+    "none";
+
+  appPage.style.display =
+    "block";
+
+  const user =
+    JSON.parse(
+      localStorage.getItem("gudangUser")
+    );
+
+  if (user) {
+
+    document.getElementById(
+      "displayUser"
+    ).innerHTML =
+      user.nama;
+
+    document.getElementById(
+      "displayRole"
+    ).innerHTML =
+      user.role;
+  }
+
+  updateChannelVisibility();
+
+  loadDashboard();
+
+  aturHakAkses();
+
+}
+
+function cekSession() {
+
+  const session =
+    localStorage.getItem("gudangUser");
+
+  if (!session) {
+
+    document.getElementById(
+      "loginPage"
+    ).style.display = "flex";
+
+    document.getElementById(
+      "appPage"
+    ).style.display = "none";
+
+    return;
+  }
+
+  try {
+
+    const user =
+      JSON.parse(session);
+
+    if (
+      !user.userId ||
+      !user.role
+    ) {
+
+      throw new Error(
+        "Session tidak valid."
+      );
+    }
+
+    tampilkanAplikasi();
+
+  } catch (error) {
+
+    localStorage.removeItem(
+      "gudangUser"
+    );
+
+    document.getElementById(
+      "loginPage"
+    ).style.display = "flex";
+
+    document.getElementById(
+      "appPage"
+    ).style.display = "none";
+  }
+
+}
+
+function logoutUser() {
+
+  const yakin =
+    confirm(
+      "Apakah Anda yakin ingin keluar?"
+    );
+
+  if (!yakin) return;
+
+  localStorage.removeItem(
+    "gudangUser"
+  );
+
+  location.reload();
+
+}
 
 /* =====================================================
    URL APPS SCRIPT
