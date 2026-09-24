@@ -1024,62 +1024,51 @@ async function loginUser() {
 function tampilkanAplikasi() {
 
   const loginPage =
-    document.getElementById(
-      "loginPage"
-    );
+    document.getElementById("loginPage");
 
   const appPage =
-    document.getElementById(
-      "appPage"
-    );
+    document.getElementById("appPage");
 
-
-  loginPage.style.display =
-    "none";
-
-  appPage.style.display =
-    "block";
-
+  loginPage.style.display = "none";
+  appPage.style.display = "block";
 
   const session =
-    localStorage.getItem(
-      "gudangUser"
-    );
-
+    localStorage.getItem("gudangUser");
 
   if (!session) {
-
     logoutUser(false);
-
     return;
-
   }
-
 
   const user =
     JSON.parse(session);
 
-
-  document.getElementById(
-    "user"
-  ).value =
+  document.getElementById("user").value =
     user.nama;
 
+  document.getElementById("userInfo").innerHTML =
+    user.nama + " • " + user.role;
 
-  document.getElementById(
-    "userInfo"
-  ).innerHTML =
-    user.nama +
-    " • " +
-    user.role;
-
-
-  updateChannelVisibility();
-
+  // Atur menu berdasarkan role
   aturHakAkses();
 
-  loadDashboard();
+  // Tentukan halaman awal berdasarkan role
+  const role =
+    String(user.role || "")
+      .trim()
+      .toLowerCase();
 
+  if (role === "gudang") {
+
+    // Gudang langsung ke halaman Scan
+    showPage("scan");
+
+  } else {
+
+    // Admin dan Viewer masuk Dashboard
+    showPage("dashboard");
+
+  }
 }
 
 
@@ -1200,214 +1189,145 @@ function logoutUser(
 function aturHakAkses() {
 
   const session =
-    localStorage.getItem(
-      "gudangUser"
-    );
-
+    localStorage.getItem("gudangUser");
 
   if (!session) return;
-
 
   const user =
     JSON.parse(session);
 
-
   const role =
-    String(
-      user.role || ""
-    )
-    .trim()
-    .toLowerCase();
+    String(user.role || "")
+      .trim()
+      .toLowerCase();
 
+  const dashboardNav =
+    document.getElementById("dashboardNav");
 
   const scanNav =
-    document.getElementById(
-      "scanNav"
-    );
+    document.getElementById("scanNav");
 
+  // Sembunyikan semua menu terlebih dahulu
+  dashboardNav.style.display = "none";
+  scanNav.style.display = "none";
 
-  /*
-   * ADMIN
-   * Boleh Dashboard + Scan
-   */
+  // =========================
+  // ADMIN
+  // =========================
+  if (role === "admin") {
 
-  if (
-    role === "admin"
-  ) {
-
-    scanNav.style.display =
-      "block";
+    dashboardNav.style.display = "block";
+    scanNav.style.display = "block";
 
     return;
-
   }
 
+  // =========================
+  // GUDANG
+  // =========================
+  if (role === "gudang") {
 
-  /*
-   * GUDANG
-   * Boleh Dashboard + Scan
-   */
-
-  if (
-    role === "gudang"
-  ) {
-
-    scanNav.style.display =
-      "block";
+    // Gudang hanya boleh transaksi
+    scanNav.style.display = "block";
 
     return;
-
   }
 
+  // =========================
+  // VIEWER
+  // =========================
+  if (role === "viewer") {
 
-  /*
-   * VIEWER
-   * Hanya Dashboard
-   */
-
-  if (
-    role === "viewer"
-  ) {
-
-    scanNav.style.display =
-      "none";
-
-
-    showPage(
-      "dashboard"
-    );
-
+    // Viewer hanya melihat dashboard
+    dashboardNav.style.display = "block";
 
     return;
-
   }
 
+  // =========================
+  // ROLE TIDAK DIKENAL
+  // =========================
 
-  /*
-   * ROLE TIDAK DIKENAL
-   */
-
-  scanNav.style.display =
-    "none";
-
+  logoutUser(false);
 }
-
 
 /* =====================================================
    NAVIGASI
    ===================================================== */
 
-function showPage(
-  page
-) {
+function showPage(page) {
 
   const dashboardPage =
-    document.getElementById(
-      "dashboardPage"
-    );
+    document.getElementById("dashboardPage");
 
   const scanPage =
-    document.getElementById(
-      "scanPage"
-    );
+    document.getElementById("scanPage");
 
   const dashboardNav =
-    document.getElementById(
-      "dashboardNav"
-    );
+    document.getElementById("dashboardNav");
 
   const scanNav =
-    document.getElementById(
-      "scanNav"
-    );
-
+    document.getElementById("scanNav");
 
   const session =
-    localStorage.getItem(
-      "gudangUser"
-    );
+    localStorage.getItem("gudangUser");
 
-
-  if (!session) {
-
-    return;
-
-  }
-
+  if (!session) return;
 
   const user =
     JSON.parse(session);
 
-
   const role =
-    String(
-      user.role || ""
-    )
-    .trim()
-    .toLowerCase();
+    String(user.role || "")
+      .trim()
+      .toLowerCase();
 
+  // =========================
+  // BATASAN ROLE
+  // =========================
 
-  /*
-   * VIEWER TIDAK BOLEH MASUK SCAN
-   */
-
-  if (
-    page === "scan" &&
-    role === "viewer"
-  ) {
-
-    page = "dashboard";
-
+  // Gudang hanya boleh Scan
+  if (role === "gudang") {
+    page = "scan";
   }
 
+  // Viewer hanya boleh Dashboard
+  if (role === "viewer") {
+    page = "dashboard";
+  }
 
-  if (
-    page === "dashboard"
-  ) {
+  // =========================
+  // DASHBOARD
+  // =========================
 
-    dashboardPage.classList.add(
-      "active"
-    );
+  if (page === "dashboard") {
 
-    scanPage.classList.remove(
-      "active"
-    );
+    dashboardPage.classList.add("active");
+    scanPage.classList.remove("active");
 
-    dashboardNav.classList.add(
-      "active"
-    );
-
-    scanNav.classList.remove(
-      "active"
-    );
-
+    dashboardNav.classList.add("active");
+    scanNav.classList.remove("active");
 
     loadDashboard();
 
+    return;
   }
 
-  else {
+  // =========================
+  // SCAN
+  // =========================
 
-    dashboardPage.classList.remove(
-      "active"
-    );
+  if (page === "scan") {
 
-    scanPage.classList.add(
-      "active"
-    );
+    dashboardPage.classList.remove("active");
+    scanPage.classList.add("active");
 
-    dashboardNav.classList.remove(
-      "active"
-    );
+    dashboardNav.classList.remove("active");
+    scanNav.classList.add("active");
 
-    scanNav.classList.add(
-      "active"
-    );
-
+    return;
   }
-
 }
-
 
 /* =====================================================
    FORMAT RUPIAH
